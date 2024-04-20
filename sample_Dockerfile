@@ -1,0 +1,31 @@
+FROM ubuntu:22.04
+
+RUN apt-get update \
+&& DEBIAN_FRONTEND="noninteractive" apt-get -y install \
+curl \
+python3-pip \
+tzdata \
+vim \
+&& pip3 install -U --no-cache-dir pip setuptools wheel \
+&& rm -rf /var/lib/apt/lists/*
+
+ENV PYTHONDONTWRITEBYTECODE=TRUE \
+PYTHONUNBUFFERED=TRUE \
+DATA_DIR=/data
+
+# sets working directory
+WORKDIR /opt/sales_app
+
+#copy requirements.txt to working dir and pip install
+COPY requirements.txt /opt/sales_app
+RUN pip3 install --no-cache-dir -r requirements.txt \
+&& mkdir -p /data/sessions \
+&& mkdir -p /data/prompts
+
+COPY app /opt/sales_app
+COPY app/.env /opt/sales_app
+COPY data_poc/sessions /data/sessions
+COPY data_poc/prompts /data/prompts
+
+# Expose the port that UVicorn will listen on
+EXPOSE 8787
