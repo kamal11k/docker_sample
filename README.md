@@ -13,3 +13,7 @@ Project_Directory
 │   │   ├── prompts/
 │   │   ├── sessions/
 ├── requirements.txt
+
+
+to build image: docker build -t sales_commerce_app .
+to run container: docker run -d -p 8787:8787 --name sales_commerce_container sales_commerce_app
